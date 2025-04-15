@@ -4,22 +4,16 @@
 Open your terminal or Anaconda Prompt and install:
 
 bash
-Copy
-Edit
 pip install biopython pandas requests matplotlib
 If you’re using Jupyter Notebook:
 
 python
-Copy
-Edit
 !pip install biopython pandas requests matplotlib
 
 ✅ Step 2: Set Up Directory Structure
 Create a folder like this:
 
 css
-Copy
-Edit
 miRNA_TargetGene_Finder/
 │
 ├── data/
@@ -39,8 +33,6 @@ miRNA_TargetGene_Finder/
 You can manually create this folder, or use Python:
 
 python
-Copy
-Edit
 import os
 
 folders = ['data', 'output', 'scripts']
@@ -70,8 +62,6 @@ You need an NCBI API key for large queries. Create one at https://www.ncbi.nlm.n
 Then configure Entrez:
 
 python
-Copy
-Edit
 from Bio import Entrez
 
 Entrez.email = "your_email@example.com"
@@ -82,8 +72,6 @@ Entrez.api_key = "YOUR_API_KEY"
 Fetch target genes for given miRNAs:
 
 python
-Copy
-Edit
 import pandas as pd
 
 def fetch_mirna_targets(mirnas, file_path='data/mirna_target_data.csv'):
@@ -94,8 +82,6 @@ def fetch_mirna_targets(mirnas, file_path='data/mirna_target_data.csv'):
 Find common genes between miRNA targets and disease-associated genes:
 
 python
-Copy
-Edit
 import pandas as pd
 
 def find_common_genes(mirna_targets, disease, file_path='data/disease_gene_data.csv'):
@@ -108,8 +94,6 @@ def find_common_genes(mirna_targets, disease, file_path='data/disease_gene_data.
 Fetch gene info from NCBI:
 
 python
-Copy
-Edit
 from Bio import Entrez
 
 Entrez.email = "your_email@example.com"
@@ -135,8 +119,6 @@ def fetch_gene_description(gene_symbol):
 This glues everything together.
 
 python
-Copy
-Edit
 from scripts.fetch_genes import fetch_mirna_targets
 from scripts.find_common_genes import find_common_genes
 from scripts.fetch_sequences import fetch_gene_description
@@ -171,8 +153,6 @@ if __name__ == "__main__":
 In terminal:
 
 bash
-Copy
-Edit
 python main.py
 
 ✅ It will:
@@ -189,8 +169,6 @@ Save the final results in output/result.csv
 Using a simple bar graph:
 
 python
-Copy
-Edit
 import matplotlib.pyplot as plt
 
 df = pd.read_csv('output/result.csv')
