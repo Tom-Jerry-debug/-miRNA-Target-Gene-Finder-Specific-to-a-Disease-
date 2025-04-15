@@ -1,4 +1,5 @@
-# -miRNA-Target-Gene-Finder-Specific-to-a-Disease-✅ Step 1: Set Up Your Environment
+# -miRNA-Target-Gene-Finder-Specific-to-a-Disease-
+✅ Step 1: Set Up Your Environment
 🔧 Install Required Libraries
 Open your terminal or Anaconda Prompt and install:
 
@@ -12,6 +13,7 @@ python
 Copy
 Edit
 !pip install biopython pandas requests matplotlib
+
 ✅ Step 2: Set Up Directory Structure
 Create a folder like this:
 
@@ -44,6 +46,7 @@ import os
 folders = ['data', 'output', 'scripts']
 for folder in folders:
     os.makedirs(folder, exist_ok=True)
+    
 ✅ Step 3: Collect Sample Data
 📑 mirna_target_data.csv
 
@@ -60,6 +63,7 @@ cardiac hypertrophy	MYH7
 cardiac hypertrophy	TNNT2
 👉 We’ll use this sample data to test the script before going online.
 
+
 ✅ Step 4: Set Up Entrez (NCBI API) in Biopython
 You need an NCBI API key for large queries. Create one at https://www.ncbi.nlm.nih.gov/account/
 
@@ -72,6 +76,7 @@ from Bio import Entrez
 
 Entrez.email = "your_email@example.com"
 Entrez.api_key = "YOUR_API_KEY"
+
 ✅ Step 5: Create the Core Python Scripts
 📜 scripts/fetch_genes.py
 Fetch target genes for given miRNAs:
@@ -124,6 +129,7 @@ def fetch_gene_description(gene_symbol):
         return description
     else:
         return "Description not found"
+        
 ✅ Step 6: Main Controller Script
 📜 main.py
 This glues everything together.
@@ -160,6 +166,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
 ✅ Step 7: Run the Program
 In terminal:
 
@@ -167,6 +174,7 @@ bash
 Copy
 Edit
 python main.py
+
 ✅ It will:
 
 Fetch target genes for miRNAs
@@ -190,6 +198,7 @@ df.groupby('miRNA')['Target_Gene'].count().plot(kind='bar')
 plt.title('Number of Common Genes per miRNA')
 plt.ylabel('Count')
 plt.show()
+
 📌 Summary:
 ✅ Created a clean, modular, project
 ✅ Integrated Biopython’s Entrez for live gene info
@@ -198,12 +207,5 @@ plt.show()
 ✅ Visualized data
 ✅ 100% expandable for larger datasets and diseases
 
-✅ What Next?
-Would you like me to:
 
-Package this into a single downloadable notebook?
-
-Help you connect it to real online databases (like miRTarBase API)?
-
-Deploy a simple web interface (using Flask) for user input?
 
