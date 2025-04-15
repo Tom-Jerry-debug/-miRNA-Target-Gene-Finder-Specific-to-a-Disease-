@@ -1,0 +1,81 @@
+# miRNA Target Gene Finder (Specific to a Disease)
+# Author: Atharv Ghyar
+
+from Bio import Entrez
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# ==== SET UP ENTREZ ====
+Entrez.email = "your_email@example.com"      # Replace with your email
+Entrez.api_key = "YOUR_API_KEY"              # Replace with your API key
+
+# ==== FETCH miRNA TARGET GENES ====
+def fetch_mirna_targets(mirnas, file_path='data/mirna_target_data.csv'):
+    df = pd.read_csv(file_path)
+    result = df[df['miRNA'].isin(mirnas)]
+    return result
+
+# ==== FIND COMMON GENES BETWEEN miRNA TARGETS AND DISEASE GENES ====
+def find_common_genes(mirna_targets, disease, file_path='data/disease_gene_data.csv'):
+    disease_df = pd.read_csv(file_path)
+    disease_genes = disease_df[disease_df['Disease'] == disease]['Gene_Symbol'].tolist()
+    common = mirna_targets[mirna_targets['Target_Gene'].isin(disease_genes)]
+    return common
+
+# ==== FETCH GENE DESCRIPTION FROM NCBI ENTREZ ====
+def fetch_gene_description(gene_symbol):
+    handle = Entrez.esearch(db="gene", term=gene_symbol + "[sym]")
+    record = Entrez.read(handle)
+    handle.close()
+    
+    if record['IdList']:
+        gene_id = record['IdList'][0]
+        handle = Entrez.efetch(db="gene", id=gene_id, rettype="xml")
+        records = Entrez.read(handle)
+        handle.close()
+        description = records[0]['Entrezgene_gene']['Gene-ref']['Gene-ref_desc']
+        return description
+    else:
+        return "Description not found"
+
+# ==== MAIN PROGRAM ====
+def main():
+    # ==== USER INPUT ====
+    mirnas = ['miR-1', 'miR-133']                    # List of miRNAs
+    disease = 'cardiac hypertrophy'                  # Disease of interest
+
+    # ==== FETCH TARGET GENES ====
+    targets = fetch_mirna_targets(mirnas)
+    print("\nTarget Genes for input miRNAs:\n", targets)
+
+    # ==== FIND COMMON GENES ====
+    common_genes = find_common_genes(targets, disease)
+    print("\nCommon Genes with", disease, ":\n", common_genes)
+
+    # ==== FETCH DESCRIPTIONS ====
+    descriptions = []
+    for gene in common_genes['Target_Gene']:
+        desc = fetch_gene_description(gene)
+        descriptions.append(desc)
+
+    common_genes['Gene_Description'] = descriptions
+    print("\nFinal Annotated Results:\n", common_genes)
+
+    # ==== SAVE RESULTS ====
+    common_genes.to_csv('output/result.csv', index=False)
+    print("\nResults saved to 'output/result.csv'.")
+
+    # ==== VISUALIZE RESULTS ====
+    if not common_genes.empty:
+        common_genes.groupby('miRNA')['Target_Gene'].count().plot(kind='bar')
+        plt.title('Number of Common Genes per miRNA')
+        plt.ylabel('Count')
+        plt.xlabel('miRNA')
+        plt.tight_layout()
+        plt.show()
+    else:
+        print("\nNo common genes found to visualize.")
+
+# ==== RUN THE PROGRAM ====
+if __name__ == "__main__":
+    main()
